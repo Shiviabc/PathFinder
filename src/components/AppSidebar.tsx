@@ -24,6 +24,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useAuth } from "@/hooks/use-auth";
 
 const navigationItems = [
   { title: "Home", url: "/", icon: Home },
@@ -37,14 +38,21 @@ const navigationItems = [
   { title: "Compare Colleges", url: "/compare", icon: BarChart3 },
 ];
 
-const accountItems = [
+const accountItemsAuthed = [
   { title: "Profile", url: "/profile", icon: User },
   { title: "Settings", url: "/settings", icon: Settings },
+  { title: "Logout", url: "/logout", icon: User },
+];
+
+const accountItemsGuest = [
+  { title: "Login", url: "/login", icon: User },
+  { title: "Signup", url: "/signup", icon: User },
 ];
 
 export function AppSidebar() {
   const { state } = useSidebar();
   const location = useLocation();
+  const { isAuthenticated } = useAuth();
 
   const isActive = (path: string) => {
     if (path === "/") {
@@ -91,7 +99,7 @@ export function AppSidebar() {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {accountItems.map((item) => (
+              {(isAuthenticated ? accountItemsAuthed : accountItemsGuest).map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <NavLink 

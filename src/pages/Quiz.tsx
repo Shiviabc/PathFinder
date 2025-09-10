@@ -6,6 +6,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Brain, CheckCircle, ArrowRight, RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/use-auth";
 
 interface Question {
   id: number;
@@ -53,6 +55,8 @@ export default function Quiz() {
   const [showResults, setShowResults] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const { toast } = useToast();
+  const { completeOnboarding } = useAuth();
+  const navigate = useNavigate();
 
   const progress = ((currentQuestion + 1) / questions.length) * 100;
 
@@ -79,11 +83,12 @@ export default function Quiz() {
       setCurrentQuestion(prev => prev + 1);
       setSelectedAnswer("");
     } else {
-      setShowResults(true);
+      completeOnboarding();
       toast({
         title: "Quiz Completed!",
-        description: "Your results are ready. Check your recommended streams below.",
+        description: "Taking you to your personalized career roadmap...",
       });
+      navigate("/roadmap", { replace: true });
     }
   };
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { UserPlus, Mail, Lock, User, MapPin, GraduationCap, BookOpen } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
 
 interface FormData {
   name: string;
@@ -20,6 +21,8 @@ interface FormData {
 
 export default function Signup() {
   const { toast } = useToast();
+  const { login } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -78,8 +81,9 @@ export default function Signup() {
         title: "Account created successfully!",
         description: "Welcome to PathFinder. You can now start exploring your career options.",
       });
-      // Here you would typically make an API call to create the account
-      console.log("Form submitted:", formData);
+      // Auto-login for demo purposes
+      login(formData.email);
+      navigate("/quiz", { replace: true });
     }
   };
 

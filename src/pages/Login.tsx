@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { LogIn, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
 
 interface LoginData {
   email: string;
@@ -16,6 +17,10 @@ interface LoginData {
 
 export default function Login() {
   const { toast } = useToast();
+  const { login, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation() as any;
+  const from = location.state?.from?.pathname || "/quiz";
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState<LoginData>({
     email: "",
@@ -49,10 +54,14 @@ export default function Login() {
         title: "Welcome back!",
         description: "You have successfully logged in to PathFinder.",
       });
-      // Here you would typically make an API call to authenticate
-      console.log("Login attempt:", formData);
+      login(formData.email);
+      navigate(from, { replace: true });
     }
   };
+
+  if (isAuthenticated) {
+    return null;
+  }
 
   const handleInputChange = (field: keyof LoginData, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));

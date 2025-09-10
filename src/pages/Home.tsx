@@ -2,8 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, BookOpen, TrendingUp, MapPin, Brain } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function Home() {
+  const { isAuthenticated } = useAuth();
   const features = [
     {
       icon: Brain,
@@ -34,6 +36,38 @@ export default function Home() {
       gradient: "bg-gradient-primary",
     },
   ];
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-full bg-background">
+        <section className="relative overflow-hidden bg-gradient-hero py-24 px-6">
+          <div className="container mx-auto max-w-6xl">
+            <div className="text-center">
+              <h1 className="text-5xl md:text-6xl font-bold text-primary-foreground mb-6">
+                Find Your Perfect
+                <span className="block bg-gradient-to-r from-accent-foreground to-secondary-foreground bg-clip-text text-transparent">
+                  Career Path
+                </span>
+              </h1>
+              <p className="text-xl text-primary-foreground/90 mb-8 max-w-3xl mx-auto leading-relaxed">
+                Start your journey with PathFinder. Create an account or sign in to continue.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Button size="lg" asChild className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-glow px-8 py-3 text-lg font-semibold">
+                  <Link to="/login">
+                    Sign In <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" asChild className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 px-8 py-3 text-lg">
+                  <Link to="/signup">Create Account</Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-full bg-background">
